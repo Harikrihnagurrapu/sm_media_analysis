@@ -33,8 +33,10 @@ engagement_collection = db.get_collection("engagement_data")
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    post_type = request.json.get('post_type')
-    
+    # post_type = request.json.get('post_type')
+    post_type = request.json.get('post_type') 
+    if not post_type:
+        return jsonify({"error": "Post type is required"}), 400
     # Retrieve all the results for the given post type and convert cursor to a list immediately
     results = list(engagement_collection.find({"post_type": post_type}))
     

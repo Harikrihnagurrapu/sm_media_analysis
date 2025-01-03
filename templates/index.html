@@ -1,6 +1,43 @@
 {% extends 'base.html' %} {% block main %}
-<div class="container">
-  <h1 class="text-center my-5">Flask App with Bootstrap</h1>
-  <button class="btn btn-primary">Click Me!</button>
-</div>
+<form id="postForm">
+    <input type="text" name="post-type" placeholder="Enter the type of post" />
+    <input type="submit" value="Submit" />
+  </form>
+  <script>
+    document.getElementById("postForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevents the form from reloading the page
+  
+      const postType = document.querySelector("input[name='post-type']").value; // Get the value of the input field
+  
+      // Check if postType is empty
+      if (!postType) {
+        alert("Post type is required!");
+        return;
+      }
+  
+      // Create the data object
+      const data = {
+        post_type: postType
+      };
+  
+      // Use the Fetch API to send a POST request to the backend
+      fetch("/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Setting the Content-Type to JSON
+        },
+        body: JSON.stringify(data), // Converting the data to a JSON string
+      })
+      .then(response => response.json()) // Parsing the response as JSON
+      .then(data => {
+        console.log("Response from server:", data);
+        alert(`Average Likes: ${data.average_likes}\nAverage Shares: ${data.average_shares}\nAverage Comments: ${data.average_comments}`);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred!");
+      });
+    });
+  </script>
+    
 {% endblock %}
